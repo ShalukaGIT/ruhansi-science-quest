@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruhansi's Science Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFBF2; --ink:#1E2340;
+  --pink:#FF5C8A; --yellow:#FFC53D; --mint:#2ED9A5;
+  --sky:#3FA9F5; --grape:#8B5CF6; --orange:#FF7A3D;
+  --green:#22C55E; --red:#EF4444;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Poppins',ui-rounded,'Segoe UI',system-ui,sans-serif;
+  background:var(--paper);
+  background-image:radial-gradient(#E8E0CE 1.6px, transparent 1.6px);
+  background-size:26px 26px;
+  color:var(--ink); min-height:100vh; font-weight:600; overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:22px 18px 60px}
+
+.home-head{text-align:center;margin:6px 0 26px}
+.pill{display:inline-block;background:var(--ink);color:#fff;font-size:15px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;padding:9px 20px;border-radius:999px;margin-bottom:16px}
+h1{font-size:clamp(34px,8vw,54px);font-weight:900;line-height:1.03;margin:0 0 10px;letter-spacing:-.02em}
+.sub{font-size:clamp(17px,3.6vw,21px);font-weight:600;opacity:.62;margin:0 0 20px}
+.starbar{display:inline-flex;align-items:center;gap:9px;background:#fff;border:4px solid var(--ink);
+  border-radius:999px;padding:8px 22px;font-size:21px;font-weight:800;box-shadow:5px 5px 0 var(--ink)}
+.starbar b{font-size:24px}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(min-width:620px){.grid{gap:20px}}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;min-height:172px;padding:24px 14px 20px;background:#fff;border:4px solid var(--ink);
+  border-radius:28px;box-shadow:7px 7px 0 var(--ink);
+  transition:transform .12s ease,box-shadow .12s ease;overflow:hidden}
+.tile::before{content:'';position:absolute;inset:auto -30% -55% -30%;height:110px;background:var(--c);
+  border-radius:50%;opacity:.9}
+.tile:active{transform:translate(4px,4px);box-shadow:3px 3px 0 var(--ink)}
+.tile .num{position:absolute;top:11px;left:13px;width:34px;height:34px;display:grid;place-items:center;
+  background:var(--c);color:#fff;border:3px solid var(--ink);border-radius:50%;font-size:16px;font-weight:800}
+.tile .emo{font-size:52px;line-height:1;position:relative;z-index:1;margin-top:6px}
+.tile .tname{font-size:clamp(16px,3.4vw,19px);font-weight:800;text-align:center;line-height:1.18;
+  position:relative;z-index:1;margin-top:8px}
+.tile .tprog{font-size:13px;font-weight:700;position:relative;z-index:1;background:#fff;padding:2px 11px;
+  border-radius:999px;border:2px solid var(--ink);margin-top:2px}
+
+.playhead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{flex:0 0 auto;width:50px;height:50px;display:grid;place-items:center;background:#fff;
+  border:4px solid var(--ink);border-radius:16px;font-size:23px;font-weight:800;
+  box-shadow:4px 4px 0 var(--ink);transition:transform .1s}
+.back:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.pname{flex:1;font-size:clamp(17px,3.8vw,21px);font-weight:800;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.pcounter{flex:0 0 auto;background:var(--ink);color:#fff;font-size:16px;font-weight:800;
+  padding:9px 15px;border-radius:999px}
+
+.dots{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.dot{flex:1 1 0;min-width:12px;height:11px;border-radius:999px;background:#E4DCC9}
+.dot.on{background:var(--c)}
+.dot.now{background:var(--c);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.qcard{background:#fff;border:4px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);
+  padding:26px 20px 22px}
+.qtext{font-size:clamp(21px,4.6vw,28px);font-weight:800;line-height:1.28;margin:0 0 22px;letter-spacing:-.01em}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:17px 18px;
+  background:var(--paper);border:3.5px solid var(--ink);border-radius:20px;
+  font-size:clamp(18px,3.9vw,22px);font-weight:700;line-height:1.25;
+  transition:transform .1s,background .18s,opacity .18s;box-shadow:4px 4px 0 var(--ink)}
+.opt:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.opt .key{flex:0 0 auto;width:38px;height:38px;display:grid;place-items:center;background:#fff;
+  border:3px solid var(--ink);border-radius:12px;font-size:17px;font-weight:900}
+.opt.right{background:var(--green);color:#fff;box-shadow:4px 4px 0 #14663A;border-color:#14663A}
+.opt.right .key{background:#fff;color:#14663A;border-color:#14663A}
+.opt.wrong{background:var(--red);color:#fff;box-shadow:4px 4px 0 #7A1D1D;border-color:#7A1D1D;
+  animation:shake .4s}
+.opt.wrong .key{background:#fff;color:#7A1D1D;border-color:#7A1D1D}
+.opt.dim{opacity:.35}
+.opt.locked{cursor:default}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}
+  45%{transform:translateX(7px)}70%{transform:translateX(-4px)}}
+
+.fb{display:none;margin-top:18px;padding:15px 18px;border-radius:18px;
+  font-size:clamp(16px,3.4vw,19px);font-weight:700;line-height:1.35;border:3px solid var(--ink)}
+.fb.show{display:block;animation:pop .3s}
+.fb.good{background:#D6FBE9}
+.fb.bad{background:#FFE2E2}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+
+.next{display:none;width:100%;margin-top:16px;padding:19px;background:var(--c);color:var(--ink);
+  border:4px solid var(--ink);border-radius:22px;font-size:clamp(19px,4.2vw,23px);font-weight:800;
+  box-shadow:6px 6px 0 var(--ink);transition:transform .1s}
+.next.show{display:block}
+.next:active{transform:translate(4px,4px);box-shadow:2px 2px 0 var(--ink)}
+
+.done{text-align:center;padding-top:14px}
+.done .big{font-size:88px;line-height:1;margin-bottom:8px;animation:bounceIn .6s}
+@keyframes bounceIn{0%{transform:scale(0) rotate(-25deg)}70%{transform:scale(1.15) rotate(6deg)}
+  100%{transform:scale(1) rotate(0)}}
+.done h2{font-size:clamp(30px,7vw,44px);font-weight:900;margin:10px 0 8px;letter-spacing:-.02em}
+.done .score{display:inline-block;background:var(--yellow);border:4px solid var(--ink);
+  border-radius:22px;padding:14px 30px;font-size:clamp(22px,5vw,28px);font-weight:900;
+  box-shadow:5px 5px 0 var(--ink);margin:14px 0 26px}
+.done .msg{font-size:clamp(17px,3.8vw,20px);font-weight:600;opacity:.7;margin:0 0 26px}
+.acts{display:flex;flex-direction:column;gap:13px}
+.acts button{padding:18px;border:4px solid var(--ink);border-radius:22px;
+  font-size:clamp(18px,4vw,21px);font-weight:800;box-shadow:5px 5px 0 var(--ink);transition:transform .1s}
+.acts button:active{transform:translate(4px,4px);box-shadow:1px 1px 0 var(--ink)}
+.btn-main{background:var(--c)}
+.btn-ghost{background:#fff}
+
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+.confetti i{position:absolute;top:-24px;width:13px;height:13px;border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(720deg)}}
+</style>
+</head>
+<body>
+<div id="app" class="wrap"></div>
+<script>
+const MODULES = [
+{id:1,name:"Alive or Not?",emoji:"🌱",color:"var(--pink)",qs:[
+ {q:"A lamb is running in the field. Is it alive?",o:["Alive","Once alive","Never alive"],a:0,w:"It eats, grows and moves. That means it is alive!"},
+ {q:"Grass is growing in the garden. Which group?",o:["Alive","Once alive","Never alive"],a:0,w:"Grass grows and drinks water. Alive!"},
+ {q:"An apple is sitting in a bowl. Which group?",o:["Alive","Once alive","Never alive"],a:1,w:"An apple came from a living tree, but it is not growing now. Once alive!"},
+ {q:"A metal fork is on the table. Which group?",o:["Alive","Once alive","Never alive"],a:2,w:"A fork never ate and never grew. Never alive!"},
+ {q:"A wooden chair is in your room. Which group?",o:["Alive","Once alive","Never alive"],a:1,w:"Wood comes from a tree. The tree was alive. Once alive!"},
+ {q:"A big rock by the road. Which group?",o:["Alive","Once alive","Never alive"],a:2,w:"A rock cannot grow or eat. Never alive!"},
+ {q:"A pink flower in a pot. Which group?",o:["Alive","Once alive","Never alive"],a:0,w:"Flowers drink water and grow. Alive!"},
+ {q:"A glass of milk on the table. Which group?",o:["Alive","Once alive","Never alive"],a:1,w:"Milk came from a cow. Once alive!"},
+ {q:"A blue lamp on the desk. Which group?",o:["Alive","Once alive","Never alive"],a:2,w:"A lamp can light up, but it cannot grow. Never alive!"},
+ {q:"A log of wood on the ground. Which group?",o:["Alive","Once alive","Never alive"],a:1,w:"A log was part of a living tree. Once alive!"}
+]},
+{id:2,name:"7 Life Processes",emoji:"💓",color:"var(--yellow)",qs:[
+ {q:"A puppy grows into a big dog. Which life process?",o:["Growth","Movement","Nutrition"],a:0,w:"Getting bigger and taller is growth."},
+ {q:"You run across the playground. Which life process?",o:["Growth","Movement","Excretion"],a:1,w:"Going from place to place is movement."},
+ {q:"You breathe in air. Which life process?",o:["Respiration","Sensitivity","Nutrition"],a:0,w:"Taking in air is respiration."},
+ {q:"You eat a bowl of fruit. Which life process?",o:["Excretion","Nutrition","Growth"],a:1,w:"Eating food is nutrition."},
+ {q:"You go to the toilet. Which life process?",o:["Excretion","Movement","Reproduction"],a:0,w:"Getting rid of waste is excretion."},
+ {q:"A hen's eggs hatch into chicks. Which life process?",o:["Growth","Sensitivity","Reproduction"],a:2,w:"Making new young ones is reproduction."},
+ {q:"You touch something hot and pull your hand away. Which one?",o:["Sensitivity","Nutrition","Excretion"],a:0,w:"Feeling and reacting is sensitivity."},
+ {q:"Do clouds do all 7 life processes?",o:["Yes","No"],a:1,w:"Clouds do not eat, grow or have babies. So no!"},
+ {q:"What can BOTH a car and a human do?",o:["Grow","Have babies","Move"],a:2,w:"Only move! A car cannot grow or make babies."},
+ {q:"You get a fright and your heart beats fast. Which one?",o:["Sensitivity","Respiration","Growth"],a:0,w:"Your body reacting to something scary is sensitivity."}
+]},
+{id:3,name:"Homes & Habitats",emoji:"🏡",color:"var(--mint)",qs:[
+ {q:"Where does a camel live?",o:["Ocean","Desert","Forest"],a:1,w:"A camel loves hot dry sand - the desert!"},
+ {q:"What 3 things does a habitat give an animal?",o:["Toys, clothes, money","Food, water, shelter","Books, air, rain"],a:1,w:"Food, water and shelter. That is all an animal needs."},
+ {q:"Can you find an earthworm under a log?",o:["Yes","No"],a:0,w:"Yes! It is dark and damp under there - perfect for worms."},
+ {q:"Under a rock it is usually...",o:["Dry and hot","Wet and dark","Sunny and bright"],a:1,w:"Wet and dark. Minibeasts love it!"},
+ {q:"In the word microhabitat, 'micro' means...",o:["Huge","Tiny","Wet"],a:1,w:"Micro means tiny. A microhabitat is a very small home."},
+ {q:"A grassy habitat is...",o:["Shady and damp","Open and sunny","Dark and cold"],a:1,w:"Grass grows out in the open where the sun shines."},
+ {q:"Which one is a microhabitat?",o:["Under a log","The whole ocean","A desert"],a:0,w:"Under a log is small and cosy - a microhabitat."},
+ {q:"Where do bees live?",o:["A cave","A hive","A web"],a:1,w:"Bees live together in a hive."},
+ {q:"Where do bats sleep in the day?",o:["In a dark cave","On a flower","In a pond"],a:0,w:"Bats love dark places like caves."},
+ {q:"Why put a log back after looking under it?",o:["To keep it tidy","To protect the animals' home","To make it heavier"],a:1,w:"That log is someone's home. Put it back carefully!"}
+]},
+{id:4,name:"Trees",emoji:"🌳",color:"var(--sky)",qs:[
+ {q:"Which part drinks water from the soil?",o:["Roots","Leaves","Crown"],a:0,w:"Roots hide under the ground and drink water."},
+ {q:"Which part holds the tree up tall?",o:["Bark","Trunk","Leaves"],a:1,w:"The trunk is the strong middle part."},
+ {q:"What is the outside skin of the trunk called?",o:["Bark","Crown","Branch"],a:0,w:"Bark is like the tree's coat."},
+ {q:"What is the very top of the tree called?",o:["Roots","Trunk","Crown"],a:2,w:"The top of the tree is the crown."},
+ {q:"Where does a bird build its nest?",o:["In the roots","On the branches","Under the bark"],a:1,w:"Branches are safe and high up."},
+ {q:"What do leaves do for the tree?",o:["Make food from sunlight","Drink water","Hold it up"],a:0,w:"Leaves are the tree's kitchen!"},
+ {q:"Where do caterpillars like to live?",o:["On the roots","On the leaves","Inside the bark"],a:1,w:"Caterpillars eat leaves, so they live on them."},
+ {q:"Which part is UNDER the ground?",o:["Roots","Crown","Leaves"],a:0,w:"Roots grow down into the soil."},
+ {q:"Moss grows best on...",o:["The tree trunk","A car","A window"],a:0,w:"Moss loves the damp bark of a trunk."}
+]},
+{id:5,name:"Food Chains",emoji:"🦁",color:"var(--grape)",qs:[
+ {q:"A green plant makes its own food. It is a...",o:["Producer","Consumer","Predator"],a:0,w:"Plants make their own food, so they are producers."},
+ {q:"An animal that eats ONLY plants is a...",o:["Carnivore","Herbivore","Omnivore"],a:1,w:"Herbivore means plant eater."},
+ {q:"An animal that eats ONLY meat is a...",o:["Herbivore","Omnivore","Carnivore"],a:2,w:"Carnivore means meat eater."},
+ {q:"An animal that eats plants AND meat is an...",o:["Omnivore","Herbivore","Producer"],a:0,w:"Omnivore eats everything!"},
+ {q:"An animal that hunts other animals is a...",o:["Prey","Predator","Producer"],a:1,w:"Predators hunt. Prey get eaten."},
+ {q:"An animal that gets eaten is called...",o:["Prey","Predator","Decomposer"],a:0,w:"Prey are the ones being hunted."},
+ {q:"In a food chain, the arrow points...",o:["To the animal that eats","Away from the sun","To the plant"],a:0,w:"The arrow shows where the food goes."},
+ {q:"Grass then Sheep then...?",o:["Wolf","Grass","Sun"],a:0,w:"The wolf eats the sheep."},
+ {q:"Every food chain starts with...",o:["A plant","A lion","A rock"],a:0,w:"Always a plant - the producer - because it makes its own food."},
+ {q:"Acorn then Mouse then Fox. What does the fox eat?",o:["The acorn","The mouse","Nothing"],a:1,w:"The fox eats the mouse."},
+ {q:"What breaks down dead plants and animals?",o:["A decomposer","A predator","A producer"],a:0,w:"Decomposers, like mushrooms, clean everything up."},
+ {q:"A food web is...",o:["Many food chains joined","One animal","A spider's home"],a:0,w:"Lots of food chains linked together make a food web."}
+]},
+{id:6,name:"Materials",emoji:"🧱",color:"var(--orange)",qs:[
+ {q:"Glass is...",o:["Transparent","Soft","A light source"],a:0,w:"You can see straight through glass."},
+ {q:"Steel is...",o:["Grown on trees","A metal","Bendy"],a:1,w:"Steel is a strong metal."},
+ {q:"Rubber is...",o:["Bendy","Transparent","Hard"],a:0,w:"Rubber stretches and bends."},
+ {q:"Wood is...",o:["Natural","Made in a factory","Transparent"],a:0,w:"Wood comes from trees, so it is natural."},
+ {q:"Plastic is...",o:["Natural","Made in a factory","A metal"],a:1,w:"People make plastic in factories."},
+ {q:"Which ball bounces the HIGHEST?",o:["A rubber ball","A steel ball","A glass ball"],a:1,w:"A steel ball bounces highest - if it does not break!"},
+ {q:"You want a window you can see through. Use...",o:["Glass","Wood","Steel"],a:0,w:"Glass lets the light in."},
+ {q:"You want something that stretches. Use...",o:["A rubber band","A brick","A spoon"],a:0,w:"Rubber bands stretch a lot!"}
+]}
+];
+
+const KEY='ruhansi_quest_v2';
+let progress={};
+try{progress=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){progress={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(progress))}catch(e){}}
+function totalStars(){let t=0;for(const m of MODULES){const p=progress[m.id];if(p&&p.best)t+=p.best}return t}
+
+const app=document.getElementById('app');
+let S={mod:null,i:0,correct:0,locked:false};
+
+function confetti(){
+  const box=document.createElement('div');box.className='confetti';
+  const cols=['#FF5C8A','#FFC53D','#2ED9A5','#3FA9F5','#8B5CF6','#FF7A3D'];
+  for(let k=0;k<46;k++){
+    const i=document.createElement('i');
+    i.style.left=Math.random()*100+'vw';
+    i.style.background=cols[k%cols.length];
+    i.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+    i.style.animationDelay=(Math.random()*0.4)+'s';
+    i.style.width=i.style.height=(9+Math.random()*10)+'px';
+    i.style.borderRadius=Math.random()>.5?'50%':'3px';
+    box.appendChild(i);
+  }
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(),3400);
+}
+
+function home(){
+  S={mod:null,i:0,correct:0,locked:false};
+  const tiles=MODULES.map(m=>{
+    const p=progress[m.id]||{best:0};
+    return '<button class="tile" style="--c:'+m.color+'" data-id="'+m.id+'">'
+      +'<span class="num">'+m.id+'</span>'
+      +'<span class="emo">'+m.emoji+'</span>'
+      +'<span class="tname">'+m.name+'</span>'
+      +'<span class="tprog">'+(p.best?p.best+' ★':'Play')+'</span>'
+      +'</button>';
+  }).join('');
+  app.innerHTML='<header class="home-head">'
+    +'<div class="pill">🔬 Science Quest</div>'
+    +'<h1>Hi Ruhansi! 👋</h1>'
+    +'<p class="sub">Tap a card and let\'s play</p>'
+    +'<div class="starbar">⭐ <b>'+totalStars()+'</b> stars</div>'
+    +'</header><div class="grid">'+tiles+'</div>';
+  app.querySelectorAll('.tile').forEach(b=>{
+    b.onclick=()=>start(parseInt(b.dataset.id,10));
+  });
+  window.scrollTo(0,0);
+}
+
+function start(id){
+  const m=MODULES.find(x=>x.id===id);
+  S={mod:m,i:0,correct:0,locked:false};
+  draw();
+}
+
+function draw(){
+  const m=S.mod,q=m.qs[S.i],n=m.qs.length;
+  const dots=m.qs.map((_,k)=>{
+    const cls=k<S.i?'dot on':(k===S.i?'dot now':'dot');
+    return '<span class="'+cls+'" style="--c:'+m.color+'"></span>';
+  }).join('');
+  const letters=['A','B','C','D'];
+  const opts=q.o.map((t,k)=>{
+    const tag=letters[k]||'•';
+    return '<button class="opt" data-k="'+k+'"><span class="key">'+tag+'</span><span>'+t+'</span></button>';
+  }).join('');
+  app.innerHTML='<div style="--c:'+m.color+'">'
+    +'<header class="playhead">'
+    +'<button class="back" id="homeBtn">←</button>'
+    +'<span class="pname">'+m.emoji+' '+m.name+'</span>'
+    +'<span class="pcounter">'+(S.i+1)+'/'+n+'</span>'
+    +'</header>'
+    +'<div class="dots">'+dots+'</div>'
+    +'<main class="qcard">'
+    +'<h2 class="qtext">'+q.q+'</h2>'
+    +'<div class="opts">'+opts+'</div>'
+    +'<div class="fb" id="fb"></div>'
+    +'<button class="next" id="nextBtn">Next →</button>'
+    +'</main></div>';
+  document.getElementById('homeBtn').onclick=home;
+  app.querySelectorAll('.opt').forEach(b=>{
+    b.onclick=()=>answer(parseInt(b.dataset.k,10));
+  });
+  document.getElementById('nextBtn').onclick=next;
+  S.locked=false;
+  window.scrollTo(0,0);
+}
+
+function answer(k){
+  if(S.locked)return;
+  S.locked=true;
+  const q=S.mod.qs[S.i];
+  const good=k===q.a;
+  if(good)S.correct++;
+  const btns=[...app.querySelectorAll('.opt')];
+  btns.forEach((b,idx)=>{
+    b.classList.add('locked');
+    if(idx===q.a)b.classList.add('right');
+    else if(idx===k)b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+  const fb=document.getElementById('fb');
+  fb.className='fb show '+(good?'good':'bad');
+  fb.innerHTML=(good?'✅ Yes! ':'💡 Almost! ')+q.w;
+  const nx=document.getElementById('nextBtn');
+  nx.textContent=(S.i===S.mod.qs.length-1)?'Finish 🎉':'Next →';
+  nx.classList.add('show');
+  nx.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function next(){
+  if(S.i<S.mod.qs.length-1){S.i++;draw()}
+  else finish();
+}
+
+function finish(){
+  const m=S.mod,n=m.qs.length,c=S.correct;
+  const pct=Math.round(c/n*100);
+  const prev=progress[m.id]||{best:0};
+  if(c>prev.best){progress[m.id]={best:c,total:n};save()}
+  const stars='⭐'.repeat(Math.max(1,Math.round(c/n*3)));
+  const msg=pct===100?"Perfect! You are a science star! 🌟"
+    :pct>=70?"Brilliant work! Keep going! 💪"
+    :pct>=40?"Good try! Play again and beat it! 🚀"
+    :"Nice start! Try once more, you can do it! 💛";
+  app.innerHTML='<div class="done" style="--c:'+m.color+'">'
+    +'<div class="big">'+(pct>=70?'🏆':'🎈')+'</div>'
+    +'<h2>'+(pct===100?'PERFECT!':'Well done!')+'</h2>'
+    +'<div class="score">'+c+' / '+n+'</div>'
+    +'<p class="msg">'+msg+'</p>'
+    +'<div style="font-size:34px;margin-bottom:26px;letter-spacing:4px">'+stars+'</div>'
+    +'<div class="acts">'
+    +'<button class="btn-main" id="againBtn">Play again 🔁</button>'
+    +'<button class="btn-ghost" id="backBtn">Back to cards 🏠</button>'
+    +'</div></div>';
+  if(pct>=70)confetti();
+  document.getElementById('againBtn').onclick=()=>start(m.id);
+  document.getElementById('backBtn').onclick=home;
+  window.scrollTo(0,0);
+}
+
+home();
+</script>
+</body>
+</html>
